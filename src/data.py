@@ -8,7 +8,11 @@ from src.config import DATA_PATH, RANDOM_STATE, TARGET
 
 
 def load_data(path=DATA_PATH) -> pd.DataFrame:
-    return pd.read_csv(path)
+    df = pd.read_csv(path)
+    if "Amount" in df.columns:
+        df["Amount"] = df["Amount"].astype(str).str.replace(r"[^\d.]", "", regex=True)
+        df["Amount"] = pd.to_numeric(df["Amount"], errors="coerce")
+    return df
 
 
 def split(df: pd.DataFrame, test_size: float = 0.2):

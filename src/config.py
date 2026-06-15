@@ -11,7 +11,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[1]
 load_dotenv(ROOT / ".env")
 
 # (S0-1) : chemin vers votre fichier de donnees (CSV) place dans data/
@@ -24,7 +24,7 @@ TARGET = "Fraud"
 # (S0-3) : colonnes numeriques de votre dataset
 NUMERIC_FEATURES: list[str] = [
     "Amount",
-    "Age of Cardholder",
+    "Age",
 ]
 
 # (S0-4) : colonnes categorielles (les autres colonnes non listees seront ignorees/dropped)
@@ -34,9 +34,10 @@ CATEGORICAL_FEATURES: list[str] = [
     "Entry Mode",
     "Type of Transaction",
     "Merchant Group",
-    "Transaction Country",
-    "Gender of Cardholder",
-    "Issuing Bank",
+    "Country of Transaction",
+    "Country of Residence",
+    "Gender",
+    "Bank",
 ]
 
 RANDOM_STATE = 42

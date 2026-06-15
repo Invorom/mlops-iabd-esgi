@@ -92,10 +92,10 @@ doctor: check-uv check-venv ## Diagnostique l'environnement de travail
 # ==============================================================================
 
 data: ## Prepare/genere le jeu de donnees dans data/
-	# TODO (S0) : appeler votre script de preparation de donnees
+	$(PYTHON) -m src.data 
 
 train: ## Entraine la baseline -> models/model.joblib (C=.. MAX_ITER=..)
-	# TODO (S5) : $(PYTHON) -m mlproject.train --c $(C) --max-iter $(MAX_ITER)
+	$(PYTHON) -m src.train --c $(C) --max-iter $(MAX_ITER)
 
 train-models: ## Compare RF / XGBoost / LightGBM (GridSearchCV) + SHAP (CV=.. SCORING=..)
 	# TODO (S7) : $(PYTHON) -m mlproject.train_models --cv $(CV) --scoring $(SCORING)
