@@ -1,12 +1,3 @@
-# ==============================================================================
-# Projet de classification - Makefile (squelette)
-# ==============================================================================
-# Seuls les targets d'INSTALLATION sont fournis. Les autres sont a completer
-# au fil des TP (un `# TODO (Sx)` indique la commande attendue).
-# Environnement gere par uv (Python 3.13) a partir de pyproject.toml.
-# Aide : make help
-# ==============================================================================
-
 SHELL        := /bin/sh
 PYTHON       := uv run python
 RUN          := uv run
