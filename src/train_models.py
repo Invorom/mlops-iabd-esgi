@@ -42,6 +42,7 @@ from sklearn.metrics import (
 from sklearn.pipeline import Pipeline
 
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.tree import DecisionTreeClassifier
 from xgboost import XGBClassifier
 from lightgbm import LGBMClassifier
 from sklearn.model_selection import GridSearchCV
@@ -101,6 +102,15 @@ def build_model_specs() -> list[ModelSpec]:
         Random Forest, XGBoost et LightGBM avec leurs grilles respectives.
     """
     return [
+        ModelSpec(
+            name="decision_tree",
+            estimator=DecisionTreeClassifier(random_state=RANDOM_STATE),
+            param_grid={
+                "clf__max_depth": [None, 5, 10, 20],
+                "clf__min_samples_split": [2, 5, 10],
+                "clf__min_samples_leaf": [1, 2, 4],
+            },
+        ),
         ModelSpec(
             name="random_forest",
             estimator=RandomForestClassifier(random_state=RANDOM_STATE),
@@ -228,13 +238,18 @@ def optimize_model(
     proba = best.predict_proba(x_test)[:, 1]
     preds = (proba >= 0.5).astype(int)
 
+    f1 = float(f1_score(y_test, preds))
+    roc_auc = float(roc_auc_score(y_test, proba))
+    
+    logger.info("--> Fin de %s : f1=%.3f, roc_auc=%.3f, meilleurs params=%s", spec.name, f1, roc_auc, search.best_params_)
+
     return FitResult(
         name=spec.name,
         best_estimator=best,
         best_params=search.best_params_,
         cv_score=float(search.best_score_),
-        f1=float(f1_score(y_test, preds)),
-        roc_auc=float(roc_auc_score(y_test, proba)),
+        f1=f1,
+        roc_auc=roc_auc,
         preds=preds,
     )
 
@@ -397,7 +412,6 @@ def train_all(
         logger.info(
             "Suivi MLflow : %s (experience: %s)", MLFLOW_TRACKING_URI, MLFLOW_EXPERIMENT
         )
-        log_dataset(df, context="training")
 
     x_train, x_test, y_train, y_test = split(df)
 
@@ -412,6 +426,7 @@ def train_all(
 
     if use_mlflow:
         with mlflow.start_run(run_name="compare-models"):
+            log_dataset(df, context="training")
             mlflow.log_param("cv", cv)
             mlflow.log_param("scoring", scoring)
             mlflow.set_tag("best_model", best.name)

@@ -48,3 +48,5 @@ MLFLOW_EXPERIMENT = os.getenv("MLFLOW_EXPERIMENT", "credit-card-fraud")
 MLFLOW_EXPERIMENT_DESCRIPTION = "Détection de fraudes par carte bancaire"
 MLFLOW_EXPERIMENT_TAGS = {"project_type": "classification", "dataset": "kaggle_fraud"}
 MODEL_NAME = os.getenv("MODEL_NAME", "fraud-detector")
+EVAL_F1_MIN = float(os.getenv("EVAL_F1_MIN", "0.70"))
+EVAL_ROC_AUC_MIN = float(os.getenv("EVAL_ROC_AUC_MIN", "0.90"))
