@@ -30,8 +30,7 @@ from src.config import (
     DATA_PATH,
     EVAL_F1_MIN,
     EVAL_ROC_AUC_MIN,
-    MLFLOW_EXPERIMENT,
-    MLFLOW_TRACKING_URI,
+    MODEL_DIR,
     MODEL_NAME,
     TARGET,
 )
@@ -99,32 +98,68 @@ def evaluate_model(model_uri: str | None = None, validate: bool = True):
     """
     df = load_data()
     _, x_test, _, y_test = split(df)
-    # mlflow.evaluate attend un seul DataFrame contenant features + cible.
-    eval_df = x_test.copy()
-    eval_df[TARGET] = y_test.values
 
     setup_experiment()
-    model_uri = model_uri or latest_model_uri()
-    logger.info("Evaluation de %s", model_uri)
+    logger.info("Evaluation du modele...")
 
     with mlflow.start_run(run_name="evaluate"):
+        # Charger le modele local (rapide) au lieu de telecharger depuis le registry
+        import joblib
+        from sklearn.metrics import f1_score, roc_auc_score, classification_report, confusion_matrix, ConfusionMatrixDisplay
+        import matplotlib.pyplot as plt
+
+        model_path = MODEL_DIR / "model.joblib"
+        if not model_path.exists():
+            raise RuntimeError(f"Modele introuvable : {model_path}. Lancez d'abord un entrainement.")
+        
+        model = joblib.load(model_path)
+        logger.info("Modele charge depuis %s", model_path)
+
+        # Predictions
+        preds = model.predict(x_test)
+        proba = model.predict_proba(x_test)[:, 1]
+
+        # Metriques
+        f1 = float(f1_score(y_test, preds))
+        roc_auc = float(roc_auc_score(y_test, proba))
+        
+        logger.info("f1_score=%.3f roc_auc=%.3f", f1, roc_auc)
+
+        # Logger dans MLflow
+        mlflow.log_metric("f1_score", f1)
+        mlflow.log_metric("roc_auc", roc_auc)
+
+        # Matrice de confusion
+        cm = confusion_matrix(y_test, preds)
+        fig, ax = plt.subplots(figsize=(5, 5))
+        ConfusionMatrixDisplay(cm).plot(ax=ax)
+        ax.set_title("Matrice de confusion - Evaluation")
+        mlflow.log_figure(fig, "confusion_matrix.png")
+        plt.close(fig)
+
+        # Rapport de classification
+        report = classification_report(y_test, preds)
+        mlflow.log_text(report, "classification_report.txt")
+
+        # Tracabilite du dataset
+        eval_df = x_test.copy()
+        eval_df[TARGET] = y_test.values
         dataset = mlflow.data.from_pandas(eval_df, source=str(DATA_PATH), targets=TARGET, name="eval")
         mlflow.log_input(dataset, context="evaluation")
-        
-        result = mlflow.models.evaluate(
-            model_uri,
-            data=eval_df,
-            targets=TARGET,
-            model_type="classifier",
-            evaluators=["default"],
-            evaluator_config={"default": {"log_explainability": False}},
-        )
-        logger.info("f1_score=%.3f roc_auc=%.3f", result.metrics["f1_score"], result.metrics["roc_auc"])
-        
+
+        # Porte qualite
         if validate:
-            mlflow.validate_evaluation_results(build_thresholds(), result)
-            
-        return result
+            thresholds = build_thresholds()
+            metrics = {"roc_auc": roc_auc, "f1_score": f1}
+            for metric_name, threshold in thresholds.items():
+                value = metrics.get(metric_name, 0.0)
+                if value < threshold.threshold:
+                    raise MlflowException(
+                        f"Validation echouee : {metric_name}={value:.3f} < seuil={threshold.threshold}"
+                    )
+            logger.info("Validation reussie : tous les seuils sont respectes.")
+
+        return {"f1_score": f1, "roc_auc": roc_auc}
 
 
 def main() -> None:

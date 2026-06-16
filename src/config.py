@@ -50,3 +50,4 @@ MLFLOW_EXPERIMENT_TAGS = {"project_type": "classification", "dataset": "kaggle_f
 MODEL_NAME = os.getenv("MODEL_NAME", "fraud-detector")
 EVAL_F1_MIN = float(os.getenv("EVAL_F1_MIN", "0.70"))
 EVAL_ROC_AUC_MIN = float(os.getenv("EVAL_ROC_AUC_MIN", "0.90"))
+API_URL = os.getenv("API_URL", "http://127.0.0.1:8000")
