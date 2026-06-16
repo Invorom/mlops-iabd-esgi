@@ -116,7 +116,8 @@ def evaluate_model(model_uri: str | None = None, validate: bool = True):
             data=eval_df,
             targets=TARGET,
             model_type="classifier",
-            evaluators=["default"]
+            evaluators=["default"],
+            evaluator_config={"default": {"log_explainability": False}},
         )
         logger.info("f1_score=%.3f roc_auc=%.3f", result.metrics["f1_score"], result.metrics["roc_auc"])
         
