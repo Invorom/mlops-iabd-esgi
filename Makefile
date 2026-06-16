@@ -97,17 +97,23 @@ data: ## Prepare/genere le jeu de donnees dans data/
 train: ## Entraine la baseline -> models/model.joblib (C=.. MAX_ITER=..)
 	$(PYTHON) -m src.train --c $(C) --max-iter $(MAX_ITER)
 
-train-models: ## Compare RF / XGBoost / LightGBM (GridSearchCV) + SHAP (CV=.. SCORING=..)
-	# TODO (S7) : $(PYTHON) -m mlproject.train_models --cv $(CV) --scoring $(SCORING)
+train-models: ## Compare DT / RF / XGBoost / LightGBM (GridSearchCV) + SHAP (CV=.. SCORING=..)
+	$(PYTHON) -m src.train_models --cv $(CV) --scoring $(SCORING)
 
 train-optuna: ## Optimise RF / XGBoost / LightGBM avec Optuna (N_TRIALS=.. CV=..)
-	# TODO (S6) : $(PYTHON) -m mlproject.train_optuna --n-trials $(N_TRIALS) --cv $(CV)
+	$(PYTHON) -m src.train_optuna --n-trials $(N_TRIALS) --cv $(CV)
 
-mlflow: ## Demarre le serveur MLflow (docker compose)
-	# TODO (S5) : docker compose -f docker-compose.yml up -d mlflow
+evaluate: ## Evalue le modele et applique la porte qualite
+	$(PYTHON) -m src.evaluate
+
+mlflow: ## Demarre le serveur MLflow en local
+	$(RUN) mlflow ui --port $(MLFLOW_PORT)
 
 api: ## Lance l'API FastAPI en rechargement auto (voir API_HOST/API_PORT)
-	# TODO (S12) : $(RUN) uvicorn mlproject.api:app --reload --host $(API_HOST) --port $(API_PORT)
+	$(RUN) uvicorn src.api:app --reload --host $(API_HOST) --port $(API_PORT)
+
+predict: ## Teste l'API avec le client de prediction
+	$(PYTHON) -m src.scripts.predict_fraud
 
 frontend: ## Lance le frontend Streamlit (voir FRONTEND_PORT, API_URL)
 	# TODO (S14bis) : $(RUN) streamlit run frontend/app.py --server.port $(FRONTEND_PORT)
@@ -121,7 +127,7 @@ docker-build: ## Construit l'image d'entrainement
 	# TODO (S8) : docker build -f docker/Dockerfile.train -t mlproject-train .
 
 docker-run: ## Lance l'entrainement en conteneur
-	# TODO (S8) : docker run --rm -v "$(CURDIR)/../models:/app/models" mlproject-train
+	# TODO (S8) : docker run --rm -v "$(CURDIR)/models:/app/models" mlproject-train
 
 docker-up: ## Demarre la stack (mlflow, api, frontend)
 	# TODO (S14) : docker compose -f docker-compose.yml up -d --build mlflow api frontend
@@ -131,19 +137,19 @@ docker-down: ## Arrete et supprime les conteneurs (conserve les volumes)
 
 
 # ==============================================================================
-# Qualite  [A COMPLETER]
+# Qualite
 # ==============================================================================
 
 lint: ## Verifie le style (ruff)
-	# TODO : $(RUN) ruff check mlproject
+	$(RUN) ruff check src
 
 format: ## Formate le code (ruff)
-	# TODO : $(RUN) ruff format mlproject
+	$(RUN) ruff format src
 
 type: ## Verifie les types (mypy)
-	# TODO : $(RUN) mypy mlproject
+	$(RUN) mypy src
 
 test: ## Lance les tests (pytest)
-	# TODO : $(RUN) pytest
+	$(RUN) pytest
 
 check: lint type test ## Workflow qualite complet (lint + types + tests)
