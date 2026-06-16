@@ -45,4 +45,6 @@ RANDOM_STATE = 42
 # Surcouche via variables d'environnement (principe 12-factor)
 MLFLOW_TRACKING_URI = os.getenv("MLFLOW_TRACKING_URI", "http://127.0.0.1:5000")
 MLFLOW_EXPERIMENT = os.getenv("MLFLOW_EXPERIMENT", "credit-card-fraud")
+MLFLOW_EXPERIMENT_DESCRIPTION = "Détection de fraudes par carte bancaire"
+MLFLOW_EXPERIMENT_TAGS = {"project_type": "classification", "dataset": "kaggle_fraud"}
 MODEL_NAME = os.getenv("MODEL_NAME", "fraud-detector")
