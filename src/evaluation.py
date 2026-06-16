@@ -2,7 +2,6 @@ import matplotlib.pyplot as plt
 import mlflow
 import shap
 import warnings
-from sklearn.pipeline import Pipeline
 
 def log_shap_summary(estimator, x_test, model_name: str) -> None:
     """Log SHAP summary plot for the model.
