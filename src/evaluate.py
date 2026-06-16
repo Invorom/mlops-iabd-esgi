@@ -144,7 +144,7 @@ def evaluate_model(model_uri: str | None = None, validate: bool = True):
         # Tracabilite du dataset
         eval_df = x_test.copy()
         eval_df[TARGET] = y_test.values
-        dataset = mlflow.data.from_pandas(eval_df, source=str(DATA_PATH), targets=TARGET, name="eval")
+        dataset = mlflow.data.from_pandas(eval_df, source=str(DATA_PATH), targets=TARGET, name="eval")  # type: ignore[attr-defined]
         mlflow.log_input(dataset, context="evaluation")
 
         # Porte qualite
