@@ -46,5 +46,10 @@ jobs:
       - name: Run Tests (Pytest)
         run: make test
 
+      - name: Start MLflow server
+        run: |
+          uv run mlflow server --host 127.0.0.1 --port 5000 &
+          sleep 5
+
       - name: Train model (Optuna)
         run: make train-optuna N_TRIALS=2 CV=3
