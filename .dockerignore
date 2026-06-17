@@ -9,6 +9,8 @@ __pycache__/
 mlruns/
 mlartifacts/
 mlflow.db
-models/
+models/*
+!models/model.joblib
+
 .env
 .github/
