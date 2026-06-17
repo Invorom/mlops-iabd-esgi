@@ -28,6 +28,15 @@ jobs:
       - name: Install dependencies
         run: make install
 
+      - name: Download dataset from Kaggle
+        env:
+          KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+          KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
+        run: |
+          mkdir -p data
+          uvx kaggle datasets download -d anurag629/credit-card-fraud-transaction-data -p data --unzip
+          mv data/*.csv data/dataset.csv
+
       - name: Run Linters (Ruff)
         run: make lint
 
