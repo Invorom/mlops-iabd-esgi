@@ -1,0 +1,18 @@
+FROM ghcr.io/astral-sh/uv:python3.13-bookworm-slim
+
+WORKDIR /app
+
+# Installation des dépendances uniquement (pour profiter du cache Docker)
+COPY pyproject.toml uv.lock ./
+RUN uv sync --frozen --no-install-project
+
+# Copie du code source et des données nécessaires
+COPY src/ src/
+COPY data/ data/
+COPY Makefile ./
+
+# Création du dossier pour les modèles
+RUN mkdir -p models
+
+# Commande par défaut pour l'entraînement
+CMD ["uv", "run", "python", "-m", "src.train"]
