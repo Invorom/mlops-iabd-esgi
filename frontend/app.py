@@ -12,9 +12,24 @@ API_URL = os.environ.get("API_URL", "http://127.0.0.1:8000")
 st.set_page_config(page_title="Détection de Fraude", layout="wide", page_icon="💳")
 st.title("💳 Outil de Détection de Fraude Bancaire")
 
-api_url = st.sidebar.text_input("URL de l'API", value=API_URL)
+home_tab, predict_tab = st.tabs(["Accueil", "Prédiction"])
 
-predict_tab, history_tab = st.tabs(["Prédiction", "Historique"])
+with home_tab:
+    st.header("Bienvenue sur le portail de détection")
+    st.markdown("""
+    Cette interface vous permet de tester en temps réel notre modèle d'intelligence artificielle conçu pour détecter les fraudes à la carte bancaire.
+    
+    ### 🎯 Objectif du projet
+    Chaque année, les fraudes causent des milliards de pertes. L'enjeu est de bloquer les transactions frauduleuses avec précision, **sans** décliner les transactions légitimes (faux positifs) qui dégradent l'expérience client.
+    
+    ### 🚀 Comment utiliser cet outil ?
+    1. Allez dans l'onglet **Prédiction**.
+    2. Remplissez les informations de la transaction simulée (montant, pays, type de carte, etc.).
+    3. Lancez l'analyse pour interroger l'API distante et obtenir le verdict (probabilité de fraude).
+    
+    *Ce projet est propulsé par FastAPI, MLflow, Optuna et Streamlit.*
+    """)
+    st.info("👈 Cliquez sur l'onglet **Prédiction** ci-dessus pour commencer.")
 
 with predict_tab:
     st.subheader("Entrez les détails de la transaction")
@@ -62,7 +77,7 @@ with predict_tab:
         
         with st.spinner("Analyse en cours..."):
             try:
-                response = httpx.post(f"{api_url}/predict", json=payload, timeout=10.0)
+                response = httpx.post(f"{API_URL}/predict", json=payload, timeout=10.0)
                 response.raise_for_status()
                 result = response.json()
                 
@@ -78,8 +93,3 @@ with predict_tab:
                 st.error(f"Appel à l'API impossible : {exc}")
             except KeyError:
                 st.error(f"Réponse inattendue de l'API : {result}")
-
-with history_tab:
-    st.subheader("Historique des prévisions")
-    st.info("Aucun journal de prévisions : ajoutez un endpoint /predictions à l'API (bonus).")
-    _ = pd
