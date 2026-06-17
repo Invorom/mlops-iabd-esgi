@@ -116,7 +116,7 @@ predict: ## Teste l'API avec le client de prediction
 	$(PYTHON) -m src.scripts.predict_fraud
 
 frontend: ## Lance le frontend Streamlit (voir FRONTEND_PORT, API_URL)
-	# TODO (S14bis) : $(RUN) streamlit run frontend/app.py --server.port $(FRONTEND_PORT)
+	$(RUN) streamlit run frontend/app.py --server.port $(FRONTEND_PORT)
 
 
 # ==============================================================================
@@ -130,7 +130,7 @@ docker-run: ## Lance l'entrainement en conteneur
 	docker run --rm -v "${PWD}/models:/app/models" mlproject-train
 
 docker-up: ## Demarre la stack (mlflow, api, frontend)
-	docker compose -f docker-compose.yml up -d --build mlflow api
+	docker compose -f docker-compose.yml up -d --build mlflow api frontend
 
 docker-down: ## Arrete et supprime les conteneurs (conserve les volumes)
 	docker compose -f docker-compose.yml down

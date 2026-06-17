@@ -29,3 +29,18 @@ services:
       - ./models:/app/models
     restart: unless-stopped
 
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.app
+    container_name: streamlit_app
+    command: ["uv", "run", "streamlit", "run", "frontend/app.py", "--server.port", "8501", "--server.address", "0.0.0.0"]
+    ports:
+      - "8501:8501"
+    environment:
+      - API_URL=http://api:8000
+    depends_on:
+      - api
+    restart: unless-stopped
+
+
