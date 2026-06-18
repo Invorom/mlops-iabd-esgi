@@ -160,6 +160,9 @@ free-ports: ## Libere les ports locaux occupes
 
 workflow-docker: free-ports ## Workflow complet avec Docker
 	@echo "$(YELLOW)>> Demarrage de MLflow...$(RESET)"
+	@if [ -d mlflow.db ]; then rm -rf mlflow.db; fi
+	@touch mlflow.db
+	@chmod 777 mlflow.db
 	docker compose up -d mlflow
 	@echo "$(YELLOW)>> Entrainement du modele en conteneur...$(RESET)"
 	sleep 5
