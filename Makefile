@@ -127,7 +127,7 @@ docker-build: ## Construit l'image d'entrainement
 	docker build -f docker/Dockerfile.train -t mlproject-train .
 
 docker-run: ## Lance l'entrainement en conteneur
-	docker run --rm --network mlops-iabd-esgi_default -e MLFLOW_TRACKING_URI=http://mlflow:5000 -v "${PWD}/models:/app/models" mlproject-train
+	docker run --rm --network host -v "${PWD}/models:/app/models" mlproject-train
 
 docker-up: ## Demarre la stack (mlflow, api, frontend)
 	docker compose -f docker-compose.yml up -d --build mlflow api frontend
@@ -155,7 +155,8 @@ test: ## Lance les tests (pytest)
 check: lint type test ## Workflow qualite complet (lint + types + tests)
 
 free-ports: ## Libere les ports locaux occupes
-	@echo "$(YELLOW)>> Liberation des ports locaux...$(RESET)"
+	@echo "$(YELLOW)>> Arret des conteneurs existants...$(RESET)"
+	-docker compose -f docker-compose.yml down 2>/dev/null || true
 	-fuser -k $(MLFLOW_PORT)/tcp $(API_PORT)/tcp $(FRONTEND_PORT)/tcp 2>/dev/null || true
 
 workflow-docker: free-ports ## Workflow complet avec Docker
@@ -164,8 +165,16 @@ workflow-docker: free-ports ## Workflow complet avec Docker
 	@touch mlflow.db
 	@chmod 777 mlflow.db
 	docker compose up -d mlflow
+	@echo "$(YELLOW)>> Attente que MLflow soit pret...$(RESET)"
+	@for i in 1 2 3 4 5 6 7 8 9 10; do \
+		if curl -sf http://127.0.0.1:$(MLFLOW_PORT)/health > /dev/null 2>&1; then \
+			echo "$(GREEN)[OK] MLflow est pret$(RESET)"; \
+			break; \
+		fi; \
+		echo "  Tentative $$i/10..."; \
+		sleep 3; \
+	done
 	@echo "$(YELLOW)>> Entrainement du modele en conteneur...$(RESET)"
-	sleep 5
 	$(MAKE) docker-run
 	@echo "$(YELLOW)>> Demarrage de l'ensemble des services...$(RESET)"
 	$(MAKE) docker-up
