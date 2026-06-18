@@ -153,3 +153,6 @@ test: ## Lance les tests (pytest)
 	$(RUN) pytest
 
 check: lint type test ## Workflow qualite complet (lint + types + tests)
+
+workflow-docker: ## Workflow complet avec Docker
+	docker-compose -f docker-compose.yml up --build
