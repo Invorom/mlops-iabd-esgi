@@ -15,10 +15,6 @@ if [ ! -f "$AIRFLOW_HOME/airflow.db" ]; then
         --email admin@example.com
 fi
 
-# Lancer le scheduler en arrière-plan
-echo ">> Demarrage du scheduler Airflow..."
-uv run airflow scheduler &
-
-# Lancer le webserver au premier plan
-echo ">> Demarrage du webserver Airflow sur le port 8080..."
-exec uv run airflow webserver --port 8080
+# Lancer Airflow en mode standalone (scheduler + webserver + triggerer)
+echo ">> Demarrage d'Airflow standalone sur le port 8080..."
+exec uv run airflow standalone
