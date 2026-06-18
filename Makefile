@@ -40,7 +40,7 @@ help: ## Liste des commandes disponibles
 
 
 # ==============================================================================
-# Setup - Installation de l'environnement Python (uv + pyproject.toml) [FOURNI]
+# Setup - Installation de l'environnement Python (uv + pyproject.toml)
 # ==============================================================================
 
 check-uv:
@@ -89,7 +89,7 @@ doctor: check-uv check-venv ## Diagnostique l'environnement de travail
 
 
 # ==============================================================================
-# Pipeline ML  [A COMPLETER]
+# Pipeline ML
 # ==============================================================================
 
 data: ## Prepare/genere le jeu de donnees dans data/
@@ -121,7 +121,7 @@ frontend: ## Lance le frontend Streamlit (voir FRONTEND_PORT, API_URL)
 
 
 # ==============================================================================
-# Docker  [A COMPLETER]
+# Docker
 # ==============================================================================
 
 docker-build: ## Construit l'image d'entrainement
