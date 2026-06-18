@@ -160,5 +160,6 @@ free-ports: ## Libere les ports locaux occupes
 workflow-docker: free-ports ## Workflow complet avec Docker
 	docker compose -f docker-compose.yml up -d --build mlflow
 	$(MAKE) docker-build
+	sleep 5
 	$(MAKE) docker-run
 	docker compose -f docker-compose.yml up --build mysql mlflow api frontend
