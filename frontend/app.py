@@ -291,7 +291,7 @@ with tab_dashboard:
         
         fig, ax = plt.subplots(figsize=(6, 4))
         fig.patch.set_alpha(0.0) # Fond transparent
-        ax.set_facecolor("transparent")
+        ax.set_facecolor("none")
         
         cax = ax.matshow(cm, cmap='Blues', alpha=0.8)
         
