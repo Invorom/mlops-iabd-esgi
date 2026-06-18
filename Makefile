@@ -144,7 +144,7 @@ airflow: ## Demarre Airflow (webserver + scheduler)
 airflow-password: ## Affiche le mot de passe admin Airflow
 	@echo "$(CYAN)Identifiants Airflow :$(RESET)"
 	@echo "  Login    : admin"
-	@echo "  Password : admin"
+	@echo "  Password : $$(docker logs airflow_server 2>&1 | grep -i password | grep -o 'password: .*' | cut -d' ' -f2 | tail -1)"
 
 
 # ==============================================================================
