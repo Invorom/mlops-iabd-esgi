@@ -55,6 +55,7 @@ services:
       - MLFLOW_TRACKING_URI=http://mlflow:5000
       - API_URL=http://api:8000
       - PYTHONPATH=/opt/airflow
+      - _PIP_ADDITIONAL_REQUIREMENTS=scikit-learn pandas httpx mlflow optuna xgboost lightgbm pydantic dill
     depends_on:
       - mlflow
       - api
