@@ -61,7 +61,10 @@ make docker-up
 make airflow
 ```
 - 🕒 Interface Airflow : [http://localhost:8080](http://localhost:8080)
-- Identifiants par défaut : **admin / admin**
+- Identifiants : **Login : admin** / Le mot de passe est généré automatiquement. Pour le récupérer, tapez :
+  ```bash
+  make airflow-password
+  ```
 
 ### 3. Workflow Local (Développement)
 Si vous souhaitez développer localement sans Docker :
