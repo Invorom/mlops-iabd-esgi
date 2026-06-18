@@ -12,7 +12,7 @@ COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen --no-install-project
 
 # Installation d'Airflow
-RUN uv pip install "apache-airflow==2.10.*" --constraint "https://raw.githubusercontent.com/apache/airflow/constraints-2.10.5/constraints-3.13.txt"
+RUN uv pip install "apache-airflow>=2.10"
 
 # Copie de l'ensemble du projet
 COPY . .
