@@ -27,6 +27,7 @@ RESET  := $(shell printf '\033[0m')
         check-uv check-venv venv-create install sync deps-sync lock reset-env doctor \
         data train train-models train-optuna mlflow api frontend \
         docker-build docker-run docker-up docker-down \
+        airflow airflow-password \
         lint format type test check
 
 
@@ -134,6 +135,16 @@ docker-up: ## Demarre la stack (mlflow, api, frontend)
 
 docker-down: ## Arrete et supprime les conteneurs (conserve les volumes)
 	docker compose -f docker-compose.yml down
+
+airflow: ## Demarre Airflow (webserver + scheduler)
+	@echo "$(YELLOW)>> Demarrage d'Airflow...$(RESET)"
+	docker compose -f docker-compose.yml up -d --build airflow
+	@echo "$(GREEN)[OK] Airflow demarre sur http://localhost:8080$(RESET)"
+
+airflow-password: ## Affiche le mot de passe admin Airflow
+	@echo "$(CYAN)Identifiants Airflow :$(RESET)"
+	@echo "  Login    : admin"
+	@echo "  Password : admin"
 
 
 # ==============================================================================
