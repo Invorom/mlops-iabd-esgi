@@ -44,23 +44,24 @@ services:
     restart: unless-stopped
 
   airflow:
-    build:
-      context: .
-      dockerfile: docker/Dockerfile.airflow
+    image: apache/airflow:2.10.5
     container_name: airflow_server
+    command: airflow standalone
     ports:
       - "8080:8080"
     environment:
+      - AIRFLOW__CORE__LOAD_EXAMPLES=False
+      - AIRFLOW__CORE__DAGS_FOLDER=/opt/airflow/dags
       - MLFLOW_TRACKING_URI=http://mlflow:5000
       - API_URL=http://api:8000
     depends_on:
       - mlflow
       - api
     volumes:
-      - ./dags:/app/dags
-      - ./data:/app/data
-      - ./models:/app/models
-      - airflow-db:/app/airflow
+      - ./dags:/opt/airflow/dags
+      - ./data:/opt/airflow/data
+      - ./models:/opt/airflow/models
+      - ./src:/opt/airflow/src
     restart: unless-stopped
 
 volumes:
