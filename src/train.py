@@ -67,7 +67,8 @@ def train(c: float = 1.0, max_iter: int = 1000) -> dict:
         mlflow.sklearn.log_model(
             model,
             artifact_path="model",
-            registered_model_name=MODEL_NAME
+            registered_model_name=MODEL_NAME,
+            serialization_format="cloudpickle"
         )
 
         # (S5-7 bonus) : sauvegarder la matrice de confusion en image et la logger en artefact
