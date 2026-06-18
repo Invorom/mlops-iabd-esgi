@@ -127,7 +127,7 @@ docker-build: ## Construit l'image d'entrainement
 	docker build -f docker/Dockerfile.train -t mlproject-train .
 
 docker-run: ## Lance l'entrainement en conteneur
-	docker run --rm --network host -v "${PWD}/models:/app/models" mlproject-train
+	docker run --rm --network mlops-iabd-esgi_default -e MLFLOW_TRACKING_URI=http://mlflow:5000 -v "${PWD}/models:/app/models" mlproject-train
 
 docker-up: ## Demarre la stack (mlflow, api, frontend)
 	docker compose -f docker-compose.yml up -d --build mlflow api frontend
