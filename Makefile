@@ -155,7 +155,7 @@ test: ## Lance les tests (pytest)
 check: lint type test ## Workflow qualite complet (lint + types + tests)
 
 free-ports: ## Libere les ports locaux occupes
-	-fuser -k $(MLFLOW_PORT)/tcp $(API_PORT)/tcp $(FRONTEND_PORT)/tcp || true
+	-fuser -k $(MLFLOW_PORT)/tcp $(API_PORT)/tcp $(FRONTEND_PORT)/tcp 2>/dev/null || true
 
 workflow-docker: free-ports ## Workflow complet avec Docker
 	docker compose -f docker-compose.yml up -d --build mlflow
