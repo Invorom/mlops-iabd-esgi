@@ -54,6 +54,7 @@ services:
       - AIRFLOW__CORE__DAGS_FOLDER=/opt/airflow/dags
       - MLFLOW_TRACKING_URI=http://mlflow:5000
       - API_URL=http://api:8000
+      - PYTHONPATH=/opt/airflow
     depends_on:
       - mlflow
       - api
