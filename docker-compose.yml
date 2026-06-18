@@ -56,6 +56,8 @@ services:
       - API_URL=http://api:8000
       - PYTHONPATH=/opt/airflow
       - _PIP_ADDITIONAL_REQUIREMENTS=scikit-learn pandas httpx mlflow optuna xgboost lightgbm pydantic dill
+      - _AIRFLOW_WWW_USER_USERNAME=admin
+      - _AIRFLOW_WWW_USER_PASSWORD=admin
     depends_on:
       - mlflow
       - api

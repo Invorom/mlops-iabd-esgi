@@ -346,7 +346,7 @@ with tab_dashboard:
             <a href="http://88.96.35.19:8080" target="_blank" style="text-decoration: none;">
                 <button style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; width: 100%; font-weight: bold;">Ouvrir Airflow</button>
             </a>
-            <p style="font-size: 0.8rem; color: #888; margin-top: 10px;">ID: admin | Pwd: make airflow-password</p>
+            <p style="font-size: 0.8rem; color: #888; margin-top: 10px;">ID: admin | Pwd: admin</p>
         </div>
         <div class="glass-card" style="text-align: center;">
             <h4>🐙 Code Source</h4>
