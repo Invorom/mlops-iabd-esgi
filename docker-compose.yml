@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: docker/Dockerfile.app
     container_name: mlflow_server
-    command: ["uv", "run", "mlflow", "server", "--host", "0.0.0.0", "--port", "5000", "--backend-store-uri", "sqlite:///mlflow.db", "--allowed-hosts", "mlflow,mlflow:5000,localhost,127.0.0.1"]
+    command: ["uv", "run", "mlflow", "server", "--host", "0.0.0.0", "--port", "5000", "--backend-store-uri", "sqlite:///mlflow.db", "--allowed-hosts", "mlflow,mlflow:5000,localhost,127.0.0.1,88.96.35.19,88.96.35.19:5000"]
     ports:
       - "5000:5000"
     volumes:
