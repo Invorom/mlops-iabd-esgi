@@ -9,8 +9,8 @@ import streamlit as st
 
 API_URL = os.environ.get("API_URL", "http://127.0.0.1:8000")
 
-st.set_page_config(page_title="Détection de Fraude par NEROT Romain", layout="wide", page_icon="💳")
-st.title("💳 Outil de Détection de Fraude Bancaire")
+st.set_page_config(page_title="Détection de Fraude", layout="wide", page_icon="💳")
+st.title("💳 Outil de Détection de Fraude Bancaire par NEROT Romain")
 
 home_tab, predict_tab = st.tabs(["Accueil", "Prédiction"])
 
