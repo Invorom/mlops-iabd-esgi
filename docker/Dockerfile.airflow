@@ -22,7 +22,6 @@ COPY src/train.py src/train.py
 COPY src/__init__.py src/__init__.py
 COPY src/evaluate.py src/evaluate.py
 COPY dags/ dags/
-COPY .env .env
 
 # Variables d'environnement Airflow
 ENV AIRFLOW_HOME=/app/airflow
