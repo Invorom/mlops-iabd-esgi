@@ -48,6 +48,11 @@ jobs:
           uvx kaggle datasets download -d anurag629/credit-card-fraud-transaction-data -p data --unzip
           mv data/*.csv data/dataset.csv
 
+      - name: Start MLflow server
+        run: |
+          uv run mlflow server --host 127.0.0.1 --port 5000 &
+          sleep 5
+
       - name: Train model
         run: make train
 
